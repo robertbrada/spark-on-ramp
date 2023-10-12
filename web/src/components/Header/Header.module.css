@@ -1,0 +1,11 @@
+.title {
+  color: black;
+  font-size: 4.8rem;
+  font-weight: 800;
+}
+
+.highlight {
+  /* color: #FFBE16; */
+  color: white;
+  border-bottom: 8px solid white;
+}

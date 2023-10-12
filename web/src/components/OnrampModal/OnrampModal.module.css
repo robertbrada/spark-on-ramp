@@ -1,0 +1,35 @@
+.modal-content {
+  padding: 0.8rem 0.4rem 1.1rem 0.4rem;
+}
+.pay-button {
+  background-color: #7d00ff;
+  color: white;
+}
+
+.pay-button:hover {
+  background-color: #7100e6;
+}
+
+.text-input {
+  background-color: #f6f6f9;
+  border: 1px solid #e5e9ed;
+  letter-spacing: 0.03rem;
+}
+
+.text-input-address {
+  font-size: 1rem;
+  color: #343a40;
+  letter-spacing: 0.04rem;
+}
+
+.currency-select-input {
+  font-weight: 500;
+  width: 6.2rem;
+  margin-right: 0;
+  border: none;
+  padding: 0;
+  background-color: #e9e9ef;
+  text-align: center;
+  font-size: 1.1rem;
+  padding-right: 1rem;
+}
