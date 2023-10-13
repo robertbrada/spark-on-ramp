@@ -18,10 +18,11 @@ import {
   ApplePayLogo,
   MastercardLogo,
 } from "../logos";
+import { Decimal } from "decimal.js";
 
 import classes from "./OnrampModal.module.css";
 
-const DEFAULT_USD_VALUE = 100;
+const DEFAULT_USD_VALUE = 1;
 
 type FiatCurrency = "eur" | "usd" | "gbp";
 
@@ -44,10 +45,15 @@ const exchangeRateData = {
 };
 
 interface OnrampModalProps extends ModalProps {
-  address?: `0x${string}`;
+  depositAddress?: `0x${string}`;
+  onDeposit: (targetAddress: `0x${string}`, amount: bigint) => void;
 }
 
-export function OnrampModal({ address, ...others }: OnrampModalProps) {
+export function OnrampModal({
+  depositAddress,
+  onDeposit,
+  ...others
+}: OnrampModalProps) {
   const [fiatCurrency, setFiatCurrency] = useState<FiatCurrency>("usd");
   const [fiatValue, setFiatValue] = useState<string | number>(
     DEFAULT_USD_VALUE
@@ -72,6 +78,15 @@ export function OnrampModal({ address, ...others }: OnrampModalProps) {
     if (!currency) return;
     setFiatCurrency(currency);
     setDaiValue((Number(fiatValue) * exchangeRateData[currency]).toFixed(2));
+  }
+
+  function depositDai() {
+    if (!depositAddress) {
+      console.error("No deposit address provided");
+      return;
+    }
+    const daiAmountBigInt = BigInt(new Decimal(daiValue).mul(1e18).toString());
+    onDeposit(depositAddress, daiAmountBigInt);
   }
 
   const currencySelect = (
@@ -135,8 +150,10 @@ export function OnrampModal({ address, ...others }: OnrampModalProps) {
             Receiving Ethereum address
           </Text>
           <TextInput
-            value={address}
+            value={depositAddress}
             size="lg"
+            disabled
+            onChange={() => console.log("change!")}
             classNames={{
               input: [
                 classes["text-input"],
@@ -149,7 +166,7 @@ export function OnrampModal({ address, ...others }: OnrampModalProps) {
           className={classes["pay-button"]}
           fullWidth
           variant="light"
-          onClick={() => console.log("Deposit!")}
+          onClick={depositDai}
           size="lg"
         >
           Buy DAI

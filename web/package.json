@@ -19,6 +19,7 @@
     "@particle-network/provider": "^1.2.0",
     "@tabler/icons-react": "^2.38.0",
     "buffer": "^6.0.3",
+    "decimal.js": "^10.4.3",
     "ethers": "^5.7.2",
     "events": "^3.3.0",
     "process": "^0.11.10",

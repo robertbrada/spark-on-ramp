@@ -4,10 +4,10 @@
 .pay-button {
   background-color: #7d00ff;
   color: white;
-}
 
-.pay-button:hover {
-  background-color: #7100e6;
+  &:hover {
+    background-color: #7100e6;
+  }
 }
 
 .text-input {

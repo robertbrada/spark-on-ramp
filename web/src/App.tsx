@@ -26,12 +26,13 @@ import { ParticleProvider } from "@particle-network/provider";
 import { IconCheck, IconCopy, IconExternalLink } from "@tabler/icons-react";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import type { Chain, HDAccount } from "viem";
+import type { Chain, HDAccount, PublicClient, WalletClient } from "viem";
 import {
   createWalletClient,
   encodeFunctionData,
   http,
   parseEther,
+  publicActions,
   toHex,
 } from "viem";
 import { mnemonicToAccount, privateKeyToAccount } from "viem/accounts";
@@ -51,6 +52,7 @@ import {
 } from "./components/logos";
 import { dappConfigurations } from "./configs/clientConfigs";
 import { factoryAbi } from "./contracts/factoryAbi";
+import { daiAbi } from "./contracts/daiAbi";
 import { simpleFactoryAbi } from "./contracts/simpleFactoryAbi";
 import { withAlchemyGasManager } from "@alchemy/aa-alchemy";
 import { EthereumGoerli } from "@particle-network/chains";
@@ -71,8 +73,12 @@ const particle = new ParticleNetwork({
 });
 
 function App() {
-  const [walletSalt, setWalletSalt] = useState(1n); // by changing the salt you can generate multiple wallets (with different address) for the same user
+  // by changing the salt you can generate multiple wallets (with different address) for the same user.
+  // In mainnet scenario should be random value so that hackers can't guess user's wallet addresses beforehand and deploy there other contracts
+  const [walletSalt, setWalletSalt] = useState(0n);
   const [erc4337Client, setErc4337Client] = useState<PublicErc4337Client>();
+  const [deployerWalletClient, setDeployerWalletClient] =
+    useState<WalletClient>();
   const [chain, setChain] = useState<Chain>(goerli);
   const [loadingLogin, setLoadingLogin] = useState(false);
   const [particleProvider, setParticleProvider] = useState<ParticleProvider>();
@@ -106,6 +112,15 @@ function App() {
         });
 
       setEntryPointAddress(entryPointAddress);
+
+      const deployerAccount = privateKeyToAccount(`0x${DEPLOYER_PRIVATE_KEY}`);
+      const walletClient = createWalletClient({
+        account: deployerAccount,
+        chain,
+        transport: http(),
+      });
+
+      setDeployerWalletClient(walletClient);
     }
 
     init();
@@ -360,11 +375,13 @@ function App() {
   // The transaction is signed and paid for by deployerAccount which is sponsoring user's first transaction
   // as part of the easier onboarding process
   async function deploySmartAccount() {
-    console.log("deploySmartAccount()");
-
     if (!erc4337Client) {
-      console.error("Client not defined");
+      console.error("erc4337Client not defined");
       return;
+    }
+
+    if (!deployerWalletClient) {
+      throw new Error("deployerWalletClient not initialized");
     }
 
     if (!particleAccountAddress) {
@@ -372,25 +389,50 @@ function App() {
       return;
     }
 
-    const deployerAccount = privateKeyToAccount(`0x${DEPLOYER_PRIVATE_KEY}`);
-    const walletClient = createWalletClient({
-      account: deployerAccount,
-      chain,
-      transport: http(),
-    });
-
     setLoadingDeployment(true);
 
     // calls createAccount() function on the SimpleAccountFactory contract
+    // TODO try to simulate transaction using deployerWalletClient (check publicActions from view)
     const { request } = await erc4337Client.simulateContract({
       address: dappConfigurations[chain.id].accountFactoryAddress,
       abi: factoryAbi,
       functionName: "createAccount",
       args: [particleAccountAddress, walletSalt],
     });
-    const txHash = await walletClient.writeContract(request);
+    const txHash = await deployerWalletClient.writeContract(request);
     console.log("txHash", txHash);
     setLoadingDeployment(false);
+  }
+
+  async function depositDai(depositAddress: `0x${string}`, amount: bigint) {
+    // This function is here just for demo purposes.
+    // Fiat on-ramp service like Moonpay will handle the DAI transfer
+    console.log("depositDai()", { depositAddress, amount });
+    const appConfig = dappConfigurations[chain.id];
+
+    if (!erc4337Client) {
+      console.error("erc4337Client not defined");
+      return;
+    }
+
+    if (!deployerWalletClient) {
+      throw new Error("deployerWalletClient not initialized");
+    }
+
+    if (!particleAccountAddress) {
+      console.error("particleAccount not defined");
+      return;
+    }
+
+    const { request } = await erc4337Client.simulateContract({
+      address: appConfig.daiAddress,
+      abi: daiAbi,
+      functionName: "transfer",
+      args: [depositAddress, amount],
+    });
+
+    const txHash = await deployerWalletClient.writeContract(request);
+    console.log("txHash", txHash);
   }
 
   return (
@@ -498,7 +540,8 @@ function App() {
           <OnrampModal
             opened={onrampOpened}
             onClose={closeOnramp}
-            address={walletAddress}
+            depositAddress={walletAddress}
+            onDeposit={depositDai}
           />
         </Container>
         <Box className={classes.footer}>
