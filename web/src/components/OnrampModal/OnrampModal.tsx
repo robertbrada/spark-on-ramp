@@ -44,7 +44,7 @@ const exchangeRateData = {
 };
 
 interface OnrampModalProps extends ModalProps {
-  address: string;
+  address?: `0x${string}`;
 }
 
 export function OnrampModal({ address, ...others }: OnrampModalProps) {

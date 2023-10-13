@@ -6,6 +6,12 @@ export const factoryAbi = [
         name: "_entryPoint",
         type: "address",
       },
+      { internalType: "contract IDai", name: "_dai", type: "address" },
+      {
+        internalType: "contract ISavingsDai",
+        name: "_savingsDai",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -14,11 +20,7 @@ export const factoryAbi = [
     inputs: [],
     name: "accountImplementation",
     outputs: [
-      {
-        internalType: "contract SimpleAccount",
-        name: "",
-        type: "address",
-      },
+      { internalType: "contract BaseAccount", name: "", type: "address" },
     ],
     stateMutability: "view",
     type: "function",
@@ -30,11 +32,7 @@ export const factoryAbi = [
     ],
     name: "createAccount",
     outputs: [
-      {
-        internalType: "contract SimpleAccount",
-        name: "ret",
-        type: "address",
-      },
+      { internalType: "contract SparkAccount", name: "ret", type: "address" },
     ],
     stateMutability: "nonpayable",
     type: "function",

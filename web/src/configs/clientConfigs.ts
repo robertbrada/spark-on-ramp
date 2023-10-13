@@ -1,11 +1,9 @@
-import {
-  Chain,
-  goerli,
-} from "viem/chains";
+import { Chain, goerli } from "viem/chains";
+
+const GAS_MANAGER_POLICY_ID = import.meta.env.VITE_GAS_MANAGER_POLICY_ID;
 
 export interface DAAppConfiguration {
-  nftContractAddress: `0x${string}`;
-  simpleAccountFactoryAddress: `0x${string}`;
+  accountFactoryAddress: `0x${string}`;
   gasManagerPolicyId: string;
   rpcUrl: string;
   chain: Chain;
@@ -14,18 +12,10 @@ export interface DAAppConfiguration {
 // TODO: Replace with your own contract addresses and policy ids, feel free to add or remove chains.
 export const dappConfigurations: Record<number, DAAppConfiguration> = {
   [goerli.id]: {
-    nftContractAddress: "0x5679b0de84bba361d31b2e7152ab20f0f8565245",
-    simpleAccountFactoryAddress: "0x9406cc6185a346906296840746125a0e44976454",
-    gasManagerPolicyId: '87232682-487b-464c-823c-098a40cebd3a',
+    // accountFactoryAddress: "0x9406cc6185a346906296840746125a0e44976454", // original
+    accountFactoryAddress: "0x7a2e67fb76ed492cba8cfa3d6786890572c4a6d9", // spark account
+    gasManagerPolicyId: GAS_MANAGER_POLICY_ID,
     rpcUrl: import.meta.env.VITE_ALCHEMY_RPC_ENDPOINT,
     chain: goerli,
   },
-  // [sepolia.id]: {
-  //   nftContractAddress: "0x5679b0de84bba361d31b2e7152ab20f0f8565245",
-  //   simpleAccountFactoryAddress: "0x9406cc6185a346906296840746125a0e44976454",
-  //   gasManagerPolicyId: env.NEXT_PUBLIC_SEPOLIA_POLICY_ID,
-  //   rpcUrl: `/api/rpc/proxy?chainId=${sepolia.id}`,
-  //   chain: sepolia,
-  // },
-  
 };

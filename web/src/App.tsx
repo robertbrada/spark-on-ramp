@@ -7,7 +7,6 @@ import {
   deepHexlify,
   getUserOperationHash,
 } from "@alchemy/aa-core";
-import { encodeFunctionData, parseEther } from "viem";
 import {
   ActionIcon,
   Box,
@@ -28,63 +27,62 @@ import { IconCheck, IconCopy, IconExternalLink } from "@tabler/icons-react";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import type { Chain, HDAccount } from "viem";
-import { toHex } from "viem";
-import { mnemonicToAccount } from "viem/accounts";
+import {
+  createWalletClient,
+  encodeFunctionData,
+  http,
+  parseEther,
+  toHex,
+} from "viem";
+import { mnemonicToAccount, privateKeyToAccount } from "viem/accounts";
 import { goerli } from "viem/chains";
 import classes from "./App.module.css";
 import { Footer } from "./components/Footer/Footer";
 import { Header } from "./components/Header/Header";
 import { OnrampModal } from "./components/OnrampModal/OnrampModal";
-import type { SegmentValue } from "./components/UserSelection/UserSelection";
+import { Toolbar } from "./components/Toolbar/Toolbar";
 import {
   ApplePayLogo,
   ETHLogo,
   GPayLogo,
   MastercardLogo,
+  ParticleLogo,
   VisaLogo,
 } from "./components/logos";
 import { dappConfigurations } from "./configs/clientConfigs";
 import { factoryAbi } from "./contracts/factoryAbi";
 import { simpleFactoryAbi } from "./contracts/simpleFactoryAbi";
-
 import { withAlchemyGasManager } from "@alchemy/aa-alchemy";
 import { EthereumGoerli } from "@particle-network/chains";
 import { theme } from "./theme";
 
 const OWNER_MNEMONIC = import.meta.env.VITE_MNEMONIC;
+const DEPLOYER_PRIVATE_KEY = import.meta.env.VITE_DEPLOYER_PRIVATE_KEY;
+const PARTICLE_APP_ID = import.meta.env.VITE_PARTICLE_APP_ID;
+const PARTICLE_PROJECT_ID = import.meta.env.VITE_PARTICLE_PROJECT_ID;
+const PARTICLE_CLIENT_KEY = import.meta.env.VITE_PARTICLE_CLIENT_KEY;
 
 const particle = new ParticleNetwork({
-  // projectId: "dc8fc110-da0e-4b55-b4c6-04af3aa9cb99",
-  // clientKey: "cZmQiTMX9UJdPf7Dw9aA65d7skboxDqOAJXzzepq",
-  // appId: "d461bb0f-9ddb-4f26-981e-a82f574d11af",
-  // chainName: "Ethereum", //optional: current chain name, default Ethereum.
-  // chainId: 5, //optional: current chain id, default 1.
-  // projectId: "dc8fc110-da0e-4b55-b4c6-04af3aa9cb99",
-  // clientKey: "cZmQiTMX9UJdPf7Dw9aA65d7skboxDqOAJXzzepq",
-  // appId: "d461bb0f-9ddb-4f26-981e-a82f574d11af",
-
-  projectId: "b4236292-c142-4a69-a941-8b7cf847a318",
-  clientKey: "cSiUEe2hMNXEqPBH10Jgh3vRjTl60gIHk64AJXyB",
-  appId: "0f0087be-c6b9-4414-b40f-df7705bf1b98",
-
+  projectId: PARTICLE_PROJECT_ID,
+  clientKey: PARTICLE_CLIENT_KEY,
+  appId: PARTICLE_APP_ID,
   chainName: EthereumGoerli.name, //optional: current chain name, default Ethereum.
   chainId: EthereumGoerli.id, //optional: current chain id, default 1.
 });
 
 function App() {
-  const [account, setAccount] = useState("");
-  const [disabled, setDisabled] = useState(false);
-  const [segmentValue, setSegmentValue] = useState<SegmentValue>("new");
-  const [client, setClient] = useState<PublicErc4337Client>();
-  const [owner, setOwner] = useState<HDAccount>(); // EOA Account that is the owner of Smart Wallet Account
+  const [walletSalt, setWalletSalt] = useState(1n); // by changing the salt you can generate multiple wallets (with different address) for the same user
+  const [erc4337Client, setErc4337Client] = useState<PublicErc4337Client>();
   const [chain, setChain] = useState<Chain>(goerli);
-  const [smartAccountAddress, setSmartAccountAddress] = useState("");
-  const [creatingAccount, setCreatingAccount] = useState(false);
+  const [loadingLogin, setLoadingLogin] = useState(false);
   const [particleProvider, setParticleProvider] = useState<ParticleProvider>();
-  const [particleAccount, setParticleAccount] = useState<string>();
-  const [entryPointAddress, setEntryPointAddress] = useState<`0x${string}`>();
+  const [loadingDeployment, setLoadingDeployment] = useState(false);
   const [onrampOpened, { open: openOnramp, close: closeOnramp }] =
     useDisclosure(false);
+  const [entryPointAddress, setEntryPointAddress] = useState<`0x${string}`>();
+  const [particleAccountAddress, setParticleAccountAddress] =
+    useState<`0x${string}`>();
+  const [walletAddress, setWalletAddress] = useState<`0x${string}`>();
 
   useEffect(() => {
     async function init() {
@@ -93,7 +91,7 @@ function App() {
         chain,
         rpcUrl: appConfig.rpcUrl,
       });
-      setClient(client);
+      setErc4337Client(client);
 
       const particleProvider = new ParticleProvider(particle.auth);
       setParticleProvider(particleProvider);
@@ -132,10 +130,10 @@ function App() {
 
     return ethersProvider.getSigner();
   }
-  // for particle auth
-  const connect = async () => {
-    const SALT = 2n;
+
+  async function doAATransaction() {
     const appConfig = dappConfigurations[chain.id];
+
     try {
       if (!particleProvider) {
         throw new Error("Particle provider not initialized");
@@ -145,13 +143,14 @@ function App() {
         throw new Error("entryPointAddress address not set");
       }
 
-      setDisabled(true);
+      if (!erc4337Client) {
+        console.error("Client not defined");
+        return;
+      }
       const particleSigner = await getParticleSigner();
-      const particleSignerAddress = await particleSigner.getAddress();
+      const particleSignerAddress =
+        (await particleSigner.getAddress()) as `0x${string}`;
       localStorage.setItem("user", particleSignerAddress);
-      setAccount(particleSignerAddress);
-      setParticleAccount(particleSignerAddress);
-
       // Now create Smart Account Signer
       const particleOwnerSigner: SmartAccountSigner = {
         signMessage: async (msg) =>
@@ -179,9 +178,9 @@ function App() {
           entryPointAddress,
           chain,
           owner: particleOwnerSigner,
-          factoryAddress: appConfig.simpleAccountFactoryAddress,
+          factoryAddress: appConfig.accountFactoryAddress,
           rpcClient: provider,
-          index: SALT,
+          index: walletSalt,
         });
       });
 
@@ -195,7 +194,7 @@ function App() {
       const data = encodeFunctionData({
         abi: simpleFactoryAbi,
         functionName: "createAccount",
-        args: [particleSignerAddress as `0x${string}`, SALT], // User's Smart Contract Wallet Address
+        args: [particleSignerAddress as `0x${string}`, walletSalt], // User's Smart Contract Wallet Address
       });
 
       console.log("entryPointAddress", entryPointAddress);
@@ -207,7 +206,7 @@ function App() {
       // TODO here you can create ADMIN signer that will sign the deploy transaction
       // TODO test if deploy passes with arbitrary signature value
       const userOp = await smartAccountSigner.buildUserOperation({
-        target: appConfig.simpleAccountFactoryAddress as `0x${string}`,
+        target: appConfig.accountFactoryAddress as `0x${string}`,
         data: data,
         value: parseEther("0"),
       });
@@ -243,7 +242,7 @@ function App() {
 
       // const result: SendUserOperationResult =
       //   await smartAccountSigner.sendUserOperation({
-      //     target: appConfig.simpleAccountFactoryAddress as `0x${string}`,
+      //     target: appConfig.accountFactoryAddress as `0x${string}`,
       //     data: data,
       //     value: parseEther("0"),
       //   });
@@ -273,14 +272,53 @@ function App() {
 
       // console.log("\n txReceipt: ", txReceipt);
     } catch (error) {
-      setDisabled(false);
+      setLoadingLogin(false);
       console.error(error);
     }
-  };
+  }
 
-  const disconnect = async () => {
-    localStorage.removeItem("user"); // Remove user from local storage
-    setAccount(""); // Reset the account state
+  const logout = async () => {
+    particle.auth.logout().then(() => {
+      console.log("logout");
+    });
+    setWalletAddress(undefined);
+    setParticleAccountAddress(undefined);
+  };
+  // for particle auth
+  const login = async () => {
+    try {
+      if (!particleProvider) {
+        throw new Error("Particle provider not initialized");
+      }
+
+      if (!entryPointAddress) {
+        throw new Error("entryPointAddress address not set");
+      }
+
+      if (!erc4337Client) {
+        console.error("Client not defined");
+        return;
+      }
+
+      setLoadingLogin(true);
+      const particleSigner = await getParticleSigner();
+      const particleSignerAddress =
+        (await particleSigner.getAddress()) as `0x${string}`;
+      localStorage.setItem("user", particleSignerAddress);
+      setParticleAccountAddress(particleSignerAddress);
+
+      const smartAccountAddress = await getSmartAccountAddress(
+        erc4337Client,
+        particleSignerAddress,
+        walletSalt
+      );
+
+      setWalletAddress(smartAccountAddress);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingLogin(false);
+    }
   };
 
   async function getAdminSigner() {
@@ -306,85 +344,80 @@ function App() {
 
   async function getSmartAccountAddress(
     client: PublicErc4337Client,
-    owner: HDAccount,
+    ownerAddress: `0x${string}`,
     salt: bigint = BigInt(0)
   ) {
     const address = await client.readContract({
-      address: dappConfigurations[chain.id].simpleAccountFactoryAddress,
+      address: dappConfigurations[chain.id].accountFactoryAddress,
       abi: factoryAbi,
       functionName: "getAddress",
-      args: [owner.address, salt], // the default AA-SDK uses 0 for the salt
+      args: [ownerAddress, salt], // the default AA-SDK uses 0 for the salt
     });
     return address;
   }
 
-  async function createAccount() {
-    if (!client) {
+  // Deploys user's smart account wallet
+  // The transaction is signed and paid for by deployerAccount which is sponsoring user's first transaction
+  // as part of the easier onboarding process
+  async function deploySmartAccount() {
+    console.log("deploySmartAccount()");
+
+    if (!erc4337Client) {
       console.error("Client not defined");
       return;
     }
-    setCreatingAccount(true);
-    const owner = await getOwner();
-    const smartAccountAddress = await getSmartAccountAddress(client, owner);
-    setCreatingAccount(false);
-    setOwner(owner);
-    setSmartAccountAddress(smartAccountAddress);
-  }
 
-  async function deploySmartAccount() {
-    console.log("deploySmartAccount()");
+    if (!particleAccountAddress) {
+      console.error("particleAccount not defined");
+      return;
+    }
+
+    const deployerAccount = privateKeyToAccount(`0x${DEPLOYER_PRIVATE_KEY}`);
+    const walletClient = createWalletClient({
+      account: deployerAccount,
+      chain,
+      transport: http(),
+    });
+
+    setLoadingDeployment(true);
+
+    // calls createAccount() function on the SimpleAccountFactory contract
+    const { request } = await erc4337Client.simulateContract({
+      address: dappConfigurations[chain.id].accountFactoryAddress,
+      abi: factoryAbi,
+      functionName: "createAccount",
+      args: [particleAccountAddress, walletSalt],
+    });
+    const txHash = await walletClient.writeContract(request);
+    console.log("txHash", txHash);
+    setLoadingDeployment(false);
   }
 
   return (
     <MantineProvider theme={theme}>
       <main className={classes.root}>
-        <Group
-          className={classes.controls}
-          justify="space-between"
+        <Toolbar
+          network={chain.network}
+          eoaAddress={particleAccountAddress}
+          walletAddress={walletAddress}
+          loadingDeploy={loadingDeployment}
+          onDeployWallet={deploySmartAccount}
+          onLogout={logout}
           px="1rem"
           pt="1rem"
-        >
-          <Group gap="xs">
-            <ETHLogo size={20} />
-            <Text fw={600} mt={1}>
-              Goerli Testnet
-            </Text>
-          </Group>
-          {smartAccountAddress && (
-            <Button
-              color="black"
-              size="xs"
-              variant="light"
-              onClick={deploySmartAccount}
-            >
-              Deploy Smart Account
-            </Button>
-          )}
-        </Group>
+        />
         <Container className={classes.content} size="md" mt="xl">
           <Stack align="center">
             <Header mt="1rem" />
-            {/* <UserSelection value={segmentValue} onChange={setSegmentValue} /> */}
-
-            {/* {owner && (
-              <Group>
-                <Text fw={600}>EOA Owner: </Text>
-                <Text>{owner.address}</Text>
-              </Group>
-            )} */}
-
-            <Button color="red" onClick={connect} mt="2rem" size="md">
-              Connect
-            </Button>
-
-            {!smartAccountAddress ? (
+            {!walletAddress ? (
               <Button
                 color="black"
-                onClick={createAccount}
+                onClick={login}
                 mt="4rem"
                 size="xl"
-                loading={creatingAccount}
+                loading={loadingLogin}
               >
+                <ParticleLogo size={18} mr="xs" />
                 Log in
               </Button>
             ) : (
@@ -401,9 +434,9 @@ function App() {
                   mt="1.5rem"
                 >
                   <Text className={classes["wallet-address"]}>
-                    {smartAccountAddress}
+                    {walletAddress}
                   </Text>
-                  <CopyButton value={smartAccountAddress}>
+                  <CopyButton value={walletAddress}>
                     {({ copied, copy }) => (
                       <Tooltip
                         label={copied ? "Copied" : "Copy address"}
@@ -433,7 +466,7 @@ function App() {
                   <ActionIcon
                     component="a"
                     size="2.2rem"
-                    href={`https://goerli.etherscan.io/address/${smartAccountAddress}`}
+                    href={`https://goerli.etherscan.io/address/${walletAddress}`}
                     target="_blank"
                     className={classes.actionIcon}
                     variant="filled"
@@ -460,19 +493,12 @@ function App() {
                 </Group>
               </Stack>
             )}
-
-            {account && (
-              <div>
-                <h2>EOA Address</h2>
-                <p>{account}</p>
-              </div>
-            )}
           </Stack>
 
           <OnrampModal
             opened={onrampOpened}
             onClose={closeOnramp}
-            address={smartAccountAddress}
+            address={walletAddress}
           />
         </Container>
         <Box className={classes.footer}>

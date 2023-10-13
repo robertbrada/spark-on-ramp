@@ -9,3 +9,4 @@ export { MoonPayLogo } from "./MoonPayLogo/MoonPayLogo";
 export { SparkLogo } from "./SparkLogo/SparkLogo";
 export { USDLogo } from "./USDLogo/USDLogo";
 export { VisaLogo } from "./VisaLogo/VisaLogo";
+export { ParticleLogo } from "./ParticleLogo/ParticleLogo";
