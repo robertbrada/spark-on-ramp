@@ -67,6 +67,7 @@ export function Toolbar({
             variant="light"
             onClick={onDeployWallet}
             loading={loadingDeploy}
+            loaderProps={{ color: "rgba(0, 0, 0, 0.4)" }}
           >
             Deploy Smart Account
           </Button>

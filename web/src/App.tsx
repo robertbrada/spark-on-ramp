@@ -1,3 +1,6 @@
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
+
 import type { PublicErc4337Client } from "@alchemy/aa-core";
 import {
   SimpleSmartContractAccount,
@@ -14,19 +17,32 @@ import {
   Container,
   CopyButton,
   Group,
-  MantineProvider,
   Stack,
   Text,
   Tooltip,
+  MantineProvider,
+  Anchor,
 } from "@mantine/core";
-import "@mantine/core/styles.css";
+import { Notifications } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 import { useDisclosure } from "@mantine/hooks";
 import { ParticleNetwork } from "@particle-network/auth";
 import { ParticleProvider } from "@particle-network/provider";
-import { IconCheck, IconCopy, IconExternalLink } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconCopy,
+  IconExternalLink,
+  IconX,
+} from "@tabler/icons-react";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import type { Chain, HDAccount, PublicClient, WalletClient } from "viem";
+import type {
+  Chain,
+  HDAccount,
+  PublicClient,
+  TransactionReceipt,
+  WalletClient,
+} from "viem";
 import {
   createWalletClient,
   encodeFunctionData,
@@ -44,7 +60,6 @@ import { OnrampModal } from "./components/OnrampModal/OnrampModal";
 import { Toolbar } from "./components/Toolbar/Toolbar";
 import {
   ApplePayLogo,
-  ETHLogo,
   GPayLogo,
   MastercardLogo,
   ParticleLogo,
@@ -57,6 +72,7 @@ import { simpleFactoryAbi } from "./contracts/simpleFactoryAbi";
 import { withAlchemyGasManager } from "@alchemy/aa-alchemy";
 import { EthereumGoerli } from "@particle-network/chains";
 import { theme } from "./theme";
+import { getTxExplorerLink } from "./utils/explorer";
 
 const OWNER_MNEMONIC = import.meta.env.VITE_MNEMONIC;
 const DEPLOYER_PRIVATE_KEY = import.meta.env.VITE_DEPLOYER_PRIVATE_KEY;
@@ -80,9 +96,10 @@ function App() {
   const [deployerWalletClient, setDeployerWalletClient] =
     useState<WalletClient>();
   const [chain, setChain] = useState<Chain>(goerli);
-  const [loadingLogin, setLoadingLogin] = useState(false);
   const [particleProvider, setParticleProvider] = useState<ParticleProvider>();
+  const [loadingLogin, setLoadingLogin] = useState(false);
   const [loadingDeployment, setLoadingDeployment] = useState(false);
+  const [loadingDaiDeposit, setLoadingDaiDeposit] = useState(false);
   const [onrampOpened, { open: openOnramp, close: closeOnramp }] =
     useDisclosure(false);
   const [entryPointAddress, setEntryPointAddress] = useState<`0x${string}`>();
@@ -299,6 +316,7 @@ function App() {
     setWalletAddress(undefined);
     setParticleAccountAddress(undefined);
   };
+
   // for particle auth
   const login = async () => {
     try {
@@ -352,11 +370,6 @@ function App() {
     return admin;
   }
 
-  async function getOwner() {
-    const ownerAccount = mnemonicToAccount(OWNER_MNEMONIC);
-    return ownerAccount;
-  }
-
   async function getSmartAccountAddress(
     client: PublicErc4337Client,
     ownerAddress: `0x${string}`,
@@ -401,7 +414,12 @@ function App() {
     });
     const txHash = await deployerWalletClient.writeContract(request);
     console.log("txHash", txHash);
+    const receipt = await erc4337Client.waitForTransactionReceipt({
+      hash: txHash,
+    });
+    console.log("receipt", receipt);
     setLoadingDeployment(false);
+    showTxNotification(receipt, "Deployment success!");
   }
 
   async function depositDai(depositAddress: `0x${string}`, amount: bigint) {
@@ -424,6 +442,7 @@ function App() {
       return;
     }
 
+    setLoadingDaiDeposit(true);
     const { request } = await erc4337Client.simulateContract({
       address: appConfig.daiAddress,
       abi: daiAbi,
@@ -433,10 +452,65 @@ function App() {
 
     const txHash = await deployerWalletClient.writeContract(request);
     console.log("txHash", txHash);
+    const receipt = await erc4337Client.waitForTransactionReceipt({
+      hash: txHash,
+    });
+    // takes a while for gas price 0.000000011 Gwei
+    console.log("receipt", receipt);
+    setLoadingDaiDeposit(false);
+    showTxNotification(receipt, "Deposit success!");
+  }
+
+  function showTxNotification(
+    receipt: TransactionReceipt,
+    successTitle: string
+  ) {
+    const txSuccess = receipt.status === "success";
+    notifications.show({
+      title: txSuccess ? successTitle : "Tx reverted",
+      message: (
+        <Anchor
+          href={getTxExplorerLink(chain.network, receipt.transactionHash)}
+          target="_blank"
+          c="white"
+        >
+          <Group gap="xs">
+            <Text>View in explorer </Text>
+            <IconExternalLink color="white" size="1rem" />
+          </Group>
+        </Anchor>
+      ),
+      icon: txSuccess ? (
+        <IconCheck style={{ width: "1.1rem", height: "1.1rem" }} stroke={2.5} />
+      ) : (
+        <IconX style={{ width: "1.1rem", height: "1.1rem" }} stroke={2.5} />
+      ),
+
+      withCloseButton: false,
+      classNames: {
+        root: txSuccess
+          ? [
+              classes["notification-root"],
+              classes["notification-root-green"],
+            ].join(" ")
+          : [
+              classes["notification-root"],
+              classes["notification-root-red"],
+            ].join(" "),
+        title: classes["notification-title"],
+        description: classes["notification-description"],
+        icon: classes["notification-icon"],
+      },
+    });
   }
 
   return (
     <MantineProvider theme={theme}>
+      <Notifications
+        autoClose={5000}
+        position="top-right"
+        containerWidth={260}
+      />
       <main className={classes.root}>
         <Toolbar
           network={chain.network}
@@ -498,7 +572,7 @@ function App() {
                             <IconCopy
                               size="1.3rem"
                               stroke={2.5}
-                              color={theme.white}
+                              color="white"
                             />
                           )}
                         </ActionIcon>
@@ -541,6 +615,7 @@ function App() {
             opened={onrampOpened}
             onClose={closeOnramp}
             depositAddress={walletAddress}
+            loadingDeposit={loadingDaiDeposit}
             onDeposit={depositDai}
           />
         </Container>

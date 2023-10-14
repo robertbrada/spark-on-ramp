@@ -46,11 +46,13 @@ const exchangeRateData = {
 
 interface OnrampModalProps extends ModalProps {
   depositAddress?: `0x${string}`;
+  loadingDeposit: boolean;
   onDeposit: (targetAddress: `0x${string}`, amount: bigint) => void;
 }
 
 export function OnrampModal({
   depositAddress,
+  loadingDeposit,
   onDeposit,
   ...others
 }: OnrampModalProps) {
@@ -167,15 +169,17 @@ export function OnrampModal({
           fullWidth
           variant="light"
           onClick={depositDai}
-          size="lg"
+          size="xl"
+          loading={loadingDeposit}
+          loaderProps={{ color: "rgba(256, 256, 256, 0.8)" }}
         >
           Buy DAI
         </Button>
-        <Group mx="auto" mt="md" gap="lg">
-          <GPayLogo size={38} />
-          <VisaLogo size={38} />
-          <ApplePayLogo size={38} />
-          <MastercardLogo size={30} />
+        <Group mx="auto" mt="lg" pb="0.2rem" gap="lg">
+          <GPayLogo size={34} />
+          <VisaLogo size={34} />
+          <ApplePayLogo size={34} />
+          <MastercardLogo size={26} />
         </Group>
       </Stack>
     </Modal>

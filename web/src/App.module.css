@@ -80,3 +80,36 @@
     transform: scale(1.04);
   }
 }
+
+.notification-root {
+  padding-left: 1rem;
+  color: white;
+
+  &::before {
+    display: none;
+  }
+}
+
+.notification-root-red {
+  background-color: var(--mantine-color-red-8);
+}
+
+.notification-root-green {
+  background-color: var(--mantine-color-green-6);
+}
+
+.notification-title {
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 0;
+}
+
+.notification-description {
+  color: white;
+  opacity: 0.8;
+  font-size: 1rem;
+}
+
+.notification-icon {
+  background-color: rgba(0, 0, 0, 0.18);
+}
