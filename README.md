@@ -17,3 +17,12 @@ The app is using Alchemy's [Simple Account Factory](https://docs.alchemy.com/ref
 - Install dependencies: `yarn`
 - Run the app: `yarn dev`
 
+### Generate fresh wallet for the user
+
+We can generate infinite amount of wallets of the user. 
+The wallet address is computed based on 
+- owner address
+- salt 
+
+The owner address stays the same (for a given email), but we can change the `salt`. 
+To do that, change the `walletSalt` variable in `web/src/App.tsx` file.

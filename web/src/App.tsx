@@ -76,7 +76,7 @@ const particle = new ParticleNetwork({
 function App() {
   // by changing the salt you can generate multiple wallets (with different address) for the same user.
   // In mainnet scenario should be random value so that hackers can't guess user's wallet addresses beforehand and deploy there other contracts
-  const [walletSalt, setWalletSalt] = useState(16n);
+  const [walletSalt, setWalletSalt] = useState(0n);
   const [erc4337Client, setErc4337Client] = useState<PublicErc4337Client>();
   const [deployerWalletClient, setDeployerWalletClient] =
     useState<WalletClient>();
