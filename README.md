@@ -1,18 +1,17 @@
 # Spark On-Ramp  
 
-This repo contains code for app that allows users deposit to Spark Protocol with web2 login and credit card payment only.
+This repo contains code for app that allows users deposit to Spark Protocol with social login and credit card payment.
+
+Check this demo video to see it in action: https://www.loom.com/share/6ec272d2360d4c8e962f634a942b183c?sid=12e0382e-8b24-41d1-a958-fa749a1426f2
 
 ## Run the web app locally
 
+All the necessary contracts are deployed on Goerli so no need to deploy any contracts.
+The app is using Alchemy's [Simple Account Factory](https://docs.alchemy.com/reference/simple-account-factory-addresses) as a smart contract wallet.
 
+- Go to the `web` folder: `cd wev`
+- Create `.env` file `cp .env.example .env`
+- Fill in the environment variables (see the comments in .env file)
+- Install dependencies: `yarn`
+- Run the app: `yarn dev`
 
-### Deploy Factory contract# 
-
-```
- forge create --rpc-url <your_rpc_url> \
-    --constructor-args 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789 0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C \
-    --private-key <your_private_key> \
-    --etherscan-api-key <your_etherscan_api_key> \
-    --verify \
-    src/SparkAccountFactory.sol:SparkAccountFactory
-```
