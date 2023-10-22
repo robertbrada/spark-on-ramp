@@ -20,6 +20,10 @@
   font-size: 1rem;
   color: #343a40;
   letter-spacing: 0.04rem;
+  &:disabled {
+    /* background-color: white; */
+    color: #343a40;
+  }
 }
 
 .currency-select-input {

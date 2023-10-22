@@ -1,0 +1,90 @@
+.title {
+  font-size: 1.4rem;
+  color: #543405;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.wallet-address {
+  color: #54340580;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08rem;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.button {
+  /* color: white; */
+  color: #442a03;
+  /* background-color: #8a350633; */
+  background-color: #f59f00;
+  font-weight: 700;
+
+  &:hover {
+    /* background-color: rgba(138, 53, 6, 0.3); */
+    background-color: #f59300;
+  }
+}
+
+.token-amount {
+  text-align: right;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #442a03;
+}
+
+.token-symbol {
+  /* padding-right: 1rem; */
+  /* color: red; */
+  opacity: 0.7;
+  font-weight: 600;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  color: #442a03;
+}
+
+.buy-button {
+  background-color: transparent;
+}
+
+.root {
+  /* background-color: #fab005; */
+}
+
+.table {
+  table-layout: fixed;
+  max-width: 30rem;
+}
+
+.td-border {
+  border-bottom: 2px solid rgba(167, 114, 5, 0.12) !important;
+}
+
+.th-logo {
+  width: 2rem;
+}
+
+.th-amount {
+    /* width: minmax(2rem, max-content); */
+}
+
+.th-symbol {
+    width: 7rem;
+}
+
+.table-td {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(167, 114, 5, 0.12) !important;
+  background-color: #fab005;
+}
+
+.logo-td {
+  /* padding-right: 0; */
+}

@@ -1,0 +1,60 @@
+.wallet-address-wrapper {
+    /* background-color: #5434051a; */
+    /* background-color: #e9a30c; */
+    background-color: #fab005;
+    /* height: 3.5rem; */
+    /* border-radius: 8px; */
+    /* border: 1px solid #ffffff40; */
+    padding: 0.8rem 0.1rem 0.8rem 0.1rem;
+    /* border: 1px solid #a470050f; */
+    border-bottom: 3px solid white;
+    color: white;
+  
+    &:hover {
+      /* background-color: #F59F00; */
+      /* background-color: white;
+      color: #fab005 */
+    }
+  }
+  
+  .wallet-address-title {
+    font-size: 2rem;
+    color: #543405;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+  
+  .wallet-address-desc {
+    font-size: 1.1rem;
+    color: #543405e2;
+    font-weight: 500;
+    opacity: 0.6;
+  }
+  
+  .wallet-address {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.08rem;
+    /* background-color: #ffffff10;
+    border-radius: 8px;
+    padding: 0.5rem 1rem; */
+  }
+  
+  .copy-button {
+    background-color: inherit;
+    /* background-color: #e9a30c; */
+    /* padding: 1rem; */
+  }
+  
+  .buy-button {
+    background-color: #3d43d2;
+    color: white;
+    height: 4.5rem;
+    transition: all 0.2s ease-in-out;
+    width: 12rem;
+  
+    &:hover {
+      background-color: #4146d7;
+      transform: scale(1.04);
+    }
+  }

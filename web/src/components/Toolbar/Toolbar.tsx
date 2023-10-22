@@ -10,6 +10,7 @@ interface ToolbarProps extends BoxProps {
   eoaAddress?: string;
   walletAddress?: string;
   loadingDeploy: boolean;
+  walletExists: boolean;
   onDeployWallet: () => void;
   onLogout: () => void;
 }
@@ -19,6 +20,7 @@ export function Toolbar({
   eoaAddress,
   walletAddress,
   loadingDeploy,
+  walletExists,
   onDeployWallet,
   onLogout,
   ...others
@@ -33,34 +35,10 @@ export function Toolbar({
               Goerli Testnet
             </Text>
           </Group>
-
-          {eoaAddress && (
-            <>
-              <Button
-                component="a"
-                target="_blank"
-                href={getAddressExplorerLink(network, eoaAddress)}
-                color="black"
-                size="xs"
-                variant="light"
-                rightSection={<IconExternalLink stroke={2} size={14} />}
-              >
-                {truncate(eoaAddress)}
-              </Button>
-              <Button
-                color="black"
-                size="xs"
-                variant="light"
-                onClick={onLogout}
-              >
-                Logout
-              </Button>
-            </>
-          )}
         </Group>
       </Group>
       <Group>
-        {walletAddress && (
+        {/* {walletAddress && !walletExists && (
           <Button
             color="black"
             size="xs"
@@ -69,8 +47,29 @@ export function Toolbar({
             loading={loadingDeploy}
             loaderProps={{ color: "rgba(0, 0, 0, 0.4)" }}
           >
-            Deploy Smart Account
+            Deploy Wallet
           </Button>
+        )} */}
+        {eoaAddress && (
+          <>
+            <Button
+              component="a"
+              target="_blank"
+              href={getAddressExplorerLink(network, eoaAddress)}
+              color="black"
+              size="xs"
+              variant="light"
+              rightSection={<IconExternalLink stroke={2} size={14} />}
+            >
+              <Group gap='xs'>
+                <span style={{opacity: 0.5}}>Wallet Owner:</span>
+                <span> {truncate(eoaAddress)}</span>
+              </Group>
+            </Button>
+            <Button color="black" size="xs" variant="light" onClick={onLogout}>
+              Logout
+            </Button>
+          </>
         )}
       </Group>
     </Group>

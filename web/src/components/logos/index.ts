@@ -10,3 +10,7 @@ export { SparkLogo } from "./SparkLogo/SparkLogo";
 export { USDLogo } from "./USDLogo/USDLogo";
 export { VisaLogo } from "./VisaLogo/VisaLogo";
 export { ParticleLogo } from "./ParticleLogo/ParticleLogo";
+export { SavingsDAILogo } from "./SavingsDAILogo/SavingsDAILogo";
+export { SparkLogoOnly } from "./SparkLogoOnly/SparkLogoOnly";
+export { MoonpayLogoOnly } from "./MoonpayLogoOnly/MoonpayLogoOnly";
+export { ParticleLogoText } from "./ParticleLogoText/ParticleLogoText";

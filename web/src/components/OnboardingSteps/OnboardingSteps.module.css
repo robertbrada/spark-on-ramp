@@ -1,0 +1,87 @@
+.header {
+  border-bottom: 2px solid rgba(167, 114, 5, 0.17);
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.text-input {
+  background-color: #f6f6f9;
+  border: 1px solid #e5e9ed;
+  letter-spacing: 0.03rem;
+}
+
+.text-input-address {
+  font-size: 1rem;
+  color: #343a40;
+  letter-spacing: 0.04rem;
+}
+
+.currency-select-input {
+  font-weight: 500;
+  width: 6.2rem;
+  margin-right: 0;
+  border: none;
+  padding: 0;
+  background-color: #e9e9ef;
+  text-align: center;
+  font-size: 1.1rem;
+  padding-right: 1rem;
+}
+
+.step-header {
+  font-size: 1.2rem;
+  color: #543405;
+  opacity: 0.4;
+  font-weight: 700;
+}
+
+.step-arrow {
+  color: #543405;
+  opacity: 0.3;
+  font-weight: 700;
+}
+
+.highlighted {
+  color: #543405;
+  opacity: 1;
+  & > p {
+    font-weight: 700;
+  }
+}
+
+.button {
+  background-color: #3d43d2;
+  color: white;
+
+  &:hover {
+    background-color: #2f34c1;
+  }
+}
+
+.wallet-address {
+  color: #54340580;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08rem;
+  /* padding-top: 1rem; */
+  text-align: center;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.wallet-title {
+  font-size: 1rem;
+  margin-top: 5rem;
+  color: #543405cd;
+  font-weight: 600;
+}
+
+.description {
+  color: #54340593;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}

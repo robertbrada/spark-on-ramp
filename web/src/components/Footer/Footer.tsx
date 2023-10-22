@@ -1,5 +1,5 @@
-import { Group, Stack, Text } from "@mantine/core";
-import { AlchemyLogo, MoonPayLogo, SparkLogo } from "../logos";
+import { Group, Stack, Text, Box } from "@mantine/core";
+import { AlchemyLogo, MoonPayLogo, SparkLogo, ParticleLogoText } from "../logos";
 
 export function Footer() {
   return (
@@ -7,10 +7,11 @@ export function Footer() {
       <Text c="white" mb="sm" size="sm" fw={500}>
         Powered by
       </Text>
-      <Group gap="2rem">
-        <SparkLogo size={75} w="6.5rem" />
-        <MoonPayLogo size={95} w="6.5rem" variant="white" />
-        <AlchemyLogo size={95} w="6.5rem" />
+      <Group gap="1.5rem">
+        <SparkLogo size={65} w="6.5rem" />
+        <MoonPayLogo size={80} w="6.5rem" variant="white" />
+        <AlchemyLogo size={80} w="6.5rem" />
+        <ParticleLogoText size={130} w="7.5rem" />
       </Group>
     </Stack>
   );
