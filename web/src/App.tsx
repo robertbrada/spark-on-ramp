@@ -256,6 +256,8 @@ function App() {
     });
   }
 
+  // TODO this is not working as expected. 
+  // The point is to batch "approve" and "deposit" transactions into a single UserOperation.
   async function batchApproveDeposit() {
     try {
       invariant(erc4337Client, "Client not defined");

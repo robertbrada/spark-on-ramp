@@ -8,13 +8,6 @@ import { getAddressExplorerLink } from "../../utils/explorer";
 import * as f from "../../utils/format";
 import classes from "./OnboardingSteps.module.css";
 
-// <step: completed>
-const initialStepsState = {
-  1: false,
-  2: false,
-  3: false,
-};
-
 function getCurrentStep(
   walletExists: boolean,
   daiApproved: boolean,
@@ -64,29 +57,6 @@ export function OnboardingSteps({
       getCurrentStep(walletExists, daiAllowance.gt(daiBalance), sDaiBalance)
     );
   }, [daiAllowance, daiBalance, sDaiBalance, walletExists]);
-
-  console.log("OnboardingSteps.tsx", {
-    walletExists,
-    daiAllowance: daiAllowance.toString(),
-    sDaiBalance: sDaiBalance.toString(),
-    currentStep: getCurrentStep(
-      walletExists,
-      daiAllowance.gt(daiBalance),
-      sDaiBalance
-    ),
-  });
-  const [stepsState, setStepsState] = useState(initialStepsState);
-
-  function setNextStep() {
-    setStepsState((stepsState) => ({ ...stepsState, [currentStep]: true }));
-    if (currentStep >= 4) return;
-    setCurrentStep((currentStep) => currentStep + 1);
-  }
-
-  function resetSteps() {
-    setCurrentStep(1);
-    setStepsState(initialStepsState);
-  }
 
   return (
     <Stack mt="lg" align="center">
@@ -176,13 +146,6 @@ export function OnboardingSteps({
           </Button>
         </>
       )}
-
-      {/* <Button onClick={setNextStep} color="white" variant="light">
-        Next
-      </Button>
-      <Button onClick={resetSteps} color="white" variant="light">
-        Reset
-      </Button> */}
       <Stack align="center" gap="0.5rem">
         <Text className={classes["wallet-title"]}>Your wallet</Text>
         <Text
