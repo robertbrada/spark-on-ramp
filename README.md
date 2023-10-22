@@ -9,7 +9,9 @@ Check this demo video to see it in action: https://www.loom.com/share/6ec272d236
 All the necessary contracts are deployed on Goerli so no need to deploy any contracts.
 The app is using Alchemy's [Simple Account Factory](https://docs.alchemy.com/reference/simple-account-factory-addresses) as a smart contract wallet.
 
-- Go to the `web` folder: `cd wev`
+- Clone the repo: `git clone https://github.com/robertbrada/spark-on-ramp.git`
+- Go to the project folder: `cd spark-on-ramp`
+- Go to the `web` folder: `cd web`
 - Create `.env` file `cp .env.example .env`
 - Fill in the environment variables (see the comments in .env file)
 - Install dependencies: `yarn`
