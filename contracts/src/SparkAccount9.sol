@@ -209,18 +209,36 @@ contract SparkAccount is BaseAccount, UUPSUpgradeable, Initializable {
     }
 
     function depositToSpark() public {
+        // // Approve Spark Protocol (= sDAI) spend user's DAI
+        // uint256 daiBalance = _dai.balanceOf(address(this));
+        // emit BalanceReceived(address(this), daiBalance);
+
+        // // bool approved = _dai.approve(address(_savingsDai), daiBalance); // use "type(uint256).max" to approve max possible amount
+        // bool approved  = _dai.approve(address(_savingsDai), type(uint256).max); // use "type(uint256).max" to approve max possible amount
+        // emit BalanceApproved(address(this), daiBalance, approved);
+
+        // require(approved, 'Approval to spend DAI by sDAI failed');
+
+        // // Once approved deposit DAI to Spark Protocol
+        // _savingsDai.deposit(daiBalance, address(this));
+        // emit Deposit(address(this), daiBalance);
+
+        // ---------------------------------------------------
+
         // Approve Spark Protocol (= sDAI) spend user's DAI
-        uint256 daiBalance = _dai.balanceOf(address(this));
-        emit BalanceReceived(address(this), daiBalance);
+        // msg.sender is the proxy contract address
+        uint256 daiBalance = _dai.balanceOf(msg.sender);
+        emit BalanceReceived(msg.sender, daiBalance);
 
         // bool approved = _dai.approve(address(_savingsDai), daiBalance); // use "type(uint256).max" to approve max possible amount
-        bool approved  = _dai.approve(address(_savingsDai), type(uint256).max); // use "type(uint256).max" to approve max possible amount
-        emit BalanceApproved(address(this), daiBalance, approved);
+        (bool success, bytes memory data) = address(_dai).delegatecall(abi.encodeWithSignature("approve(address,uint256)", msg.sender, type(uint256).max));
+        // bool approved  = _dai.approve(address(_savingsDai), type(uint256).max); // use "type(uint256).max" to approve max possible amount
+        emit BalanceApproved(address(this), daiBalance, success);
 
-        require(approved, 'Approval to spend DAI by sDAI failed');
+        require(success, 'Approval to spend DAI by sDAI failed');
 
-        // Once approved deposit DAI to Spark Protocol
-        _savingsDai.deposit(daiBalance, address(this));
+        // Once approved deposit DAI to Spark Protocol and send tokens back to Proxy contract
+        _savingsDai.deposit(daiBalance, msg.sender);
         emit Deposit(address(this), daiBalance);
     }
 }

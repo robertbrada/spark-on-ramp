@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
+    include: ["alchemy-sdk"],
     esbuildOptions: {
       define: {
         global: "globalThis",
@@ -15,6 +16,11 @@ export default defineConfig({
       process: "process/browser",
       stream: "stream-browserify",
       util: "util",
+    },
+  },
+  build: {
+    rollupOptions: {
+      external: ["mod-b"],
     },
   },
 });
