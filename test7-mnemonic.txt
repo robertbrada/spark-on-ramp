@@ -1,0 +1,1 @@
+const mnemonic = 'hundred unusual useful alcohol lyrics invite report nothing story scale beach decline'

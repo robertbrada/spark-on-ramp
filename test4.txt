@@ -1,0 +1,1 @@
+const ethPrivayeKey = 0xL5UyzgyGcgfGnJacJp1SjH8jikdF6nadFeHVaYD1Vx1mwr7KN2y2
