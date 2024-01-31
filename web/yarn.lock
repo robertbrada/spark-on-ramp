@@ -2,26 +2,41 @@
 # yarn lockfile v1
 
 
+"@adraffy/ens-normalize@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.10.0.tgz#d2a39395c587e092d77cbbc80acf956a54f38bf7"
+  integrity sha512-nA9XHtlAkYfJxY7bce8DcN7eKxWWCWkU+1GR9d+U6MbNpfwQp8TI7vqOsBsMcHoT4mBu2kypKoSKnghEzOOq5Q==
+
 "@adraffy/ens-normalize@1.9.4":
   version "1.9.4"
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.9.4.tgz#aae21cb858bbb0411949d5b7b3051f4209043f62"
   integrity sha512-UK0bHA7hh9cR39V+4gl2/NnBBjoXIxkuWAPCaY4X7fbH4L/azIi7ilWOCjMUYfpJgraLUAqkRi2BqrjME8Rynw==
 
-"@alchemy/aa-alchemy@^0.1.0-alpha.32":
-  version "0.1.0-alpha.32"
-  resolved "https://registry.yarnpkg.com/@alchemy/aa-alchemy/-/aa-alchemy-0.1.0-alpha.32.tgz#33ce9b99796fe38950f6a6074adfb88595a354ed"
-  integrity sha512-ICkiCW064//5P2F8kgsoZDsN9mllLzTE1ZjdO8SMFkRODYAoc04Fz1Ko7hKYTcw+tbJP+XptdbzaYoGEd9PzXA==
+"@alchemy/aa-accounts@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@alchemy/aa-accounts/-/aa-accounts-1.1.0.tgz#797261275d26277198644687fb61a3c6fc11da6a"
+  integrity sha512-Eu7YyzXDR8MUzaoUKqObdHZJGVJgBxrLyshmQ1BNU2ZinWrHR9+7CEzQaY54psmtjdKt7Sfi6ZOA++Hg+AGJ1w==
   dependencies:
-    viem "^1.10.9"
+    "@alchemy/aa-core" "^1.1.0"
+    viem "^1.16.2"
 
-"@alchemy/aa-core@^0.1.0-alpha.32":
-  version "0.1.0-alpha.32"
-  resolved "https://registry.yarnpkg.com/@alchemy/aa-core/-/aa-core-0.1.0-alpha.32.tgz#c94e8eaab4ab2ad7400ae29b58d31018adf67c07"
-  integrity sha512-aS+0U2yqeEyNcoumPxd5fLBuSBA3bj3FTwMkmyYjWZSnUDjdqFb/a4yc5v4zhe1pBejCWzu6fJzNwIC4+xCFdg==
+"@alchemy/aa-alchemy@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@alchemy/aa-alchemy/-/aa-alchemy-1.1.0.tgz#24bb3e1eeb8256f4fdb1bb6385afd0ef52bcc95a"
+  integrity sha512-qBKIBw6nrB7mbSi5WWZUfQMilGhIUciBZVId/U95Lv53pfP/0qsoKzBW+ETh/RL5b7bzXid2csRn4rdROsV5Pw==
+  dependencies:
+    "@alchemy/aa-core" "^1.1.0"
+    viem "^1.16.2"
+
+"@alchemy/aa-core@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@alchemy/aa-core/-/aa-core-1.1.0.tgz#76a2111b620567ab27514f83e521c33b4cd6addd"
+  integrity sha512-q/c60nudHtM53qM9l89h5uUrCTdITtsHR5DH+fUWsRSZGJi9irGKhWrfMBMQ0HylN6gw5DcQE4TcKij5/mXawg==
   dependencies:
     abitype "^0.8.3"
     eventemitter3 "^5.0.1"
-    viem "^1.10.9"
+    viem "^1.16.2"
+    zod "^3.22.4"
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.1"
@@ -242,15 +257,6 @@
     "@babel/helper-string-parser" "^7.22.5"
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
-
-"@biconomy/particle-auth@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@biconomy/particle-auth/-/particle-auth-2.0.1.tgz#09c95d37c846c11631fe48c772b6a4012c1b78e6"
-  integrity sha512-1lX55wRP69o4suBQly7wm8Vm/g4zMn0g3NBWE25wPoUjSx+qLhabXtLmF78mnGFWfKZc90KH5FXgWmErdRDLLA==
-  dependencies:
-    "@particle-network/auth" "^0.13.1"
-    "@particle-network/biconomy" "^0.1.0"
-    "@particle-network/provider" "^0.13.1"
 
 "@coinbase/wallet-sdk@^3.6.6":
   version "3.7.2"
@@ -943,14 +949,6 @@
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.2.tgz#6f26dbc8fbc7205873ce3cee2f690eba0d421b39"
   integrity sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==
 
-"@particle-network/analytics@^0.13.5":
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/@particle-network/analytics/-/analytics-0.13.5.tgz#83c913c93e8fe18b4bd6742d4950e62ff16e50ae"
-  integrity sha512-ca7LIblXkdwtzlGFmqILfWNEpCM+uLiYlM9xoRE2uxoZqPZ33B85TVnFVEHrii0AjZ6epis3ek6OB68woGr3ug==
-  dependencies:
-    hash.js "^1.1.7"
-    uuidv4 "^6.2.13"
-
 "@particle-network/analytics@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@particle-network/analytics/-/analytics-1.0.0.tgz#5f3bf56bce4b61e4c7177e3f4ae6f9f50c4c3ccb"
@@ -958,17 +956,6 @@
   dependencies:
     hash.js "^1.1.7"
     uuidv4 "^6.2.13"
-
-"@particle-network/auth@^0.13.1":
-  version "0.13.6"
-  resolved "https://registry.yarnpkg.com/@particle-network/auth/-/auth-0.13.6.tgz#f647ebacb2fad49f7ed4b489943ae9260d678bb6"
-  integrity sha512-oJTCyOmuSVprGz6txNMgcX7iY8uP+X/yUi8iyDGnBAyNwC58TbnzBPylmTL8gz1OsPjf6l04ohd4uMJfZeaiGA==
-  dependencies:
-    "@particle-network/analytics" "^0.13.5"
-    "@particle-network/common" "^0.14.0"
-    "@particle-network/crypto" "^0.13.5"
-    draggabilly "^3.0.0"
-    qs "^6.11.0"
 
 "@particle-network/auth@^1.2.1":
   version "1.2.1"
@@ -981,31 +968,10 @@
     buffer "^6.0.3"
     draggabilly "^3.0.0"
 
-"@particle-network/biconomy@^0.1.0":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@particle-network/biconomy/-/biconomy-0.1.6.tgz#3eb0d4f08927a690dc4774f134a05b23fd4cbf9e"
-  integrity sha512-gDCDLb3xY90JLBOIb5VdzyWIIuG8400sz2pauVx+tj6zQNoACaimkHhATnPlOVSTVu6X7y6muoT2gJ2OgZ0gyQ==
-  dependencies:
-    axios "^1.3.6"
-    uuid "^8.3.2"
-
 "@particle-network/chains@*":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@particle-network/chains/-/chains-1.2.1.tgz#ac64485397ddb15613e6ce2613917ae11135e085"
   integrity sha512-U2Z94owdtPUz7e78Wj/Fit8TQwEQNNggak78bJn8V9+Q/+qfReILSvWqxUzlJw/bCgzjvMcHVjbnizz6F1ujuA==
-
-"@particle-network/common@^0.14.0":
-  version "0.14.4"
-  resolved "https://registry.yarnpkg.com/@particle-network/common/-/common-0.14.4.tgz#309634513716177f0c3c0f20b8b4f293f7b0a765"
-  integrity sha512-KLJNkn62Etw18uFT3oyPT62ZhmQxzRemqLyAfw/TJVEprdHrfhfdwjSv3HIMxvFfLbjtIfpInL79OtkmL82nwQ==
-
-"@particle-network/crypto@^0.13.5":
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/@particle-network/crypto/-/crypto-0.13.5.tgz#b0898298deac88379edd4d78f7b94690f49252c8"
-  integrity sha512-jSR78vnNXt6ujzzEIFJS6LtR/O/PpdffqbpTr8CZcSSyHFj3daWt+HzPGSkKEdCNIoFVxuVoHHAfZ82/uKUUBw==
-  dependencies:
-    crypto-js "^4.1.1"
-    uuidv4 "^6.2.13"
 
 "@particle-network/crypto@^1.0.0":
   version "1.0.0"
@@ -1015,14 +981,6 @@
     crypto-js "^4.1.1"
     uuidv4 "^6.2.13"
 
-"@particle-network/provider@^0.13.1":
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/@particle-network/provider/-/provider-0.13.5.tgz#97ffac3c7f5cf0596244cd9a576cf1f509766e5d"
-  integrity sha512-p/O+zn0ggYWG+tmwQol9ysGV9qLz6hubX5KplOrOiUTHEX0IwgKUbzBxozPIyo1bPcRBTmFPDZ/AeoE426gafw==
-  dependencies:
-    axios "^1.3.6"
-    uuid "^8.3.2"
-
 "@particle-network/provider@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@particle-network/provider/-/provider-1.2.0.tgz#009d86b31e80d2406a76c4e734d133977daa65be"
@@ -1031,6 +989,11 @@
     "@particle-network/chains" "*"
     axios "^1.3.6"
     uuid "^8.3.2"
+
+"@remix-run/router@1.11.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.11.0.tgz#e0e45ac3fff9d8a126916f166809825537e9f955"
+  integrity sha512-BHdhcWgeiudl91HvVa2wxqZjSHbheSgIiDvxrF1VjFzBzpTtuDPkOdOi3Iqvc08kXtFkLjhbS+ML9aM8mJS+wQ==
 
 "@rollup/plugin-inject@^5.0.1":
   version "5.0.4"
@@ -2575,6 +2538,11 @@ isomorphic-ws@^4.0.1:
   resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
   integrity sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==
 
+isows@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/isows/-/isows-1.0.3.tgz#93c1cf0575daf56e7120bab5c8c448b0809d0d74"
+  integrity sha512-2cKei4vlmg2cxEjm3wVSqn8pcoRF/LX/wpifuuNquFO4SQmPwarClT+SUCA2lt+l581tTeZIPIZuIDo2jWN1fg==
+
 jayson@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/jayson/-/jayson-4.1.0.tgz#60dc946a85197317f2b1439d672a8b0a99cea2f9"
@@ -2945,7 +2913,7 @@ qrcode@1.5.3, qrcode@^1.5.1:
     pngjs "^5.0.0"
     yargs "^15.3.1"
 
-qs@^6.10.3, qs@^6.11.0:
+qs@^6.10.3:
   version "6.11.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.2.tgz#64bea51f12c1f5da1bc01496f48ffcff7c69d7d9"
   integrity sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==
@@ -3027,6 +2995,21 @@ react-remove-scroll@^2.5.6:
     tslib "^2.1.0"
     use-callback-ref "^1.3.0"
     use-sidecar "^1.1.2"
+
+react-router-dom@^6.18.0:
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.18.0.tgz#0a50c167209d6e7bd2ed9de200a6579ea4fb1dca"
+  integrity sha512-Ubrue4+Ercc/BoDkFQfc6og5zRQ4A8YxSO3Knsne+eRbZ+IepAsK249XBH/XaFuOYOYr3L3r13CXTLvYt5JDjw==
+  dependencies:
+    "@remix-run/router" "1.11.0"
+    react-router "6.18.0"
+
+react-router@6.18.0:
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.18.0.tgz#32e2bedc318e095a48763b5ed7758e54034cd36a"
+  integrity sha512-vk2y7Dsy8wI02eRRaRmOs9g2o+aE72YCx5q9VasT1N9v+lrdB79tIqrjMfByHiY5+6aYkH2rUa5X839nwWGPDg==
+  dependencies:
+    "@remix-run/router" "1.11.0"
 
 react-style-singleton@^2.2.1:
   version "2.2.1"
@@ -3439,7 +3422,7 @@ valtio@1.11.2:
     proxy-compare "2.5.1"
     use-sync-external-store "1.2.0"
 
-viem@^1.0.0, viem@^1.10.9, viem@^1.15.4:
+viem@^1.0.0:
   version "1.15.4"
   resolved "https://registry.yarnpkg.com/viem/-/viem-1.15.4.tgz#422b2a23bc2c9e240d91758ae29a464ca6faed5b"
   integrity sha512-kQtJiYbZ86rzGdAXkvAxf6ovsabzyn41loNiSjQNFXwvn24cGP3IbQhQcK5OYorQY9Pz7Dm54EBV5XhFxo+15g==
@@ -3452,6 +3435,20 @@ viem@^1.0.0, viem@^1.10.9, viem@^1.15.4:
     "@types/ws" "^8.5.5"
     abitype "0.9.8"
     isomorphic-ws "5.0.0"
+    ws "8.13.0"
+
+viem@^1.16.2, viem@^1.19.3:
+  version "1.19.3"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-1.19.3.tgz#896443d4f68005d68b9a1b5b61370ceb7bdf913b"
+  integrity sha512-SymIbCO0nIq2ucna8R3XV4f/lEshKGLuhYU2f6O+OAbmE2ugBxBKx2axMKQrQML87nE0jb2qqqtRJka5SO/7MA==
+  dependencies:
+    "@adraffy/ens-normalize" "1.10.0"
+    "@noble/curves" "1.2.0"
+    "@noble/hashes" "1.3.2"
+    "@scure/bip32" "1.3.2"
+    "@scure/bip39" "1.2.1"
+    abitype "0.9.8"
+    isows "1.0.3"
     ws "8.13.0"
 
 vite@^4.0.0:
@@ -3584,6 +3581,11 @@ yargs@^15.3.1:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
+
+zod@^3.22.4:
+  version "3.22.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
+  integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==
 
 zustand@^4.3.1:
   version "4.4.3"

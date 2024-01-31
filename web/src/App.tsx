@@ -76,7 +76,7 @@ const particle = new ParticleNetwork({
 function App() {
   // by changing the salt you can generate multiple wallets (with different address) for the same user.
   // In mainnet scenario should be random value so that hackers can't guess user's wallet addresses beforehand and deploy there other contracts
-  const [walletSalt, setWalletSalt] = useState(0n);
+  const [walletSalt, setWalletSalt] = useState(28n);
   const [erc4337Client, setErc4337Client] = useState<PublicErc4337Client>();
   const [deployerWalletClient, setDeployerWalletClient] =
     useState<WalletClient>();
@@ -199,6 +199,8 @@ function App() {
 
       // Now create Smart Account Signer
       const particleOwnerSigner: SmartAccountSigner = {
+        signerType: "json-rpc", // also can be "local"
+        inner: particleSigner,
         signMessage: async (msg) =>
           (await particleSigner.signMessage(msg)) as `0x${string}`,
         getAddress: async () =>
@@ -256,9 +258,10 @@ function App() {
     });
   }
 
-  // TODO this is not working as expected. 
+  // TODO this is not working as expected.
   // The point is to batch "approve" and "deposit" transactions into a single UserOperation.
   async function batchApproveDeposit() {
+    console.log("batchApproveDeposit()");
     try {
       invariant(erc4337Client, "Client not defined");
       invariant(walletSigner, "walletSigner not defined");
@@ -266,6 +269,8 @@ function App() {
 
       const appConfig = dappConfigurations[chain.id];
       const walletAddress = await walletSigner.getAddress();
+
+      console.log("walletAddress", walletAddress);
 
       const walletDaiBalance = await getErc20Balance(
         erc4337Client,
@@ -282,7 +287,7 @@ function App() {
       const dataSparkDeposit = encodeFunctionData({
         abi: sDaiAbi,
         functionName: "deposit",
-        args: [walletDaiBalance, await walletSigner.getAddress()],
+        args: [walletDaiBalance, walletAddress],
       });
 
       const batchData = await walletSigner.account?.encodeBatchExecute([
@@ -300,7 +305,7 @@ function App() {
 
       // Fails
       const userOp = await walletSigner.buildUserOperation({
-        target: await walletSigner.getAddress(),
+        target: walletAddress,
         data: batchData,
       });
 
@@ -767,7 +772,7 @@ function App() {
       <Notifications
         autoClose={5000}
         position="top-right"
-        containerWidth={260}
+        containerWidth={280}
       />
       <main className={classes.root}>
         <Toolbar
@@ -864,7 +869,8 @@ function App() {
                   loadingApproval={loadingApproval}
                   loadingSparkDeposit={loadingSparkDeposit}
                   onCreateWallet={deployWalletByOwner}
-                  onApproveDai={approveDai}
+                  // onApproveDai={approveDai}
+                  onApproveDai={batchApproveDeposit}
                   onSparkDeposit={depositDaiToSpark}
                 />
               ))
